@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: hello
+  profiles:
+    active: dev
+
+suijishu:
+  int: ${random.int}
+  long: ${random.long}

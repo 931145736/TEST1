@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: fiegn-consumer
+
+server:
+  port: 8882
+eureka:
+  client:
+    serviceUrl:
+      defaultZone:  http://peer1:1111/eureka/
+feign:
+  hystrix:
+   enabled: true
+
+ #接口的熔断超时时间的配置可以通过其方法名作为<CommaneKey>来进行配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+hello:
+  ribbon:
+    ConnecTimeout: 500
+    ReadTimeout: 2000
+    OkToRetryOnAllOperation: true
+    MaxAutoRetriesNextServer: 2
+    MaxAutoRetries: 1
+logging:
+  level:
+    com:
+      ws:
+        feignconsumer:
+          service:
+            HelloService: DEBUG

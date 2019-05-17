@@ -1,0 +1,11 @@
+server:
+  port: 8881
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://peer1:1111/eureka/,http://peer2:1112/eureka/
+  instance:
+    prefer-ip-address: true
+spring:
+  application:
+    name: ribbon-consumer
