@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: api-gateway
+server:
+  port: 5555
+#--------路由规则配置 yml文件配置，实现有序的路由规则
+zuul:
+  #ignored-patterns: /**/test/**  #配置忽略表达式
+  routes:
+    api-a: #代表路由的名字，自定义，但是一组path和url映射关系的路由名要相同
+      path: /api-a/**  #Ant 通配符：? 匹配任意单个字符;* 匹配任意数量的字符; ** 匹配任意数量的字符,支持多级目录
+      serviceId: hello  #在服务注册中心注册的其他微服务 path和serviceId组合能够保证API网关的健壮和稳定，也能用到ribbon的客户端负载均衡
+      customSensitiveHeaders: true #对指定路由开启自定义敏感头
+    api-b:
+      path: /api-b/**
+      url: fiegn-consumer  #在服务注册中心注册的其他微服务 path和url组合请求没有线程隔离和断路器的保护，并且也不会有负载均衡的能力
+  #ignored-services: *  //代表zuul将对所有服务都不自动创建路由规则，这时需要为需要路由的服务添加映射规则
+    api-c:
+      path: /api-c/**
+      url: forward:/local  #本地跳转,由API网关进行本地处理
+  #retryable: false  #全局关闭重试
+  #AccessFilter: #禁用指定的过滤器，AccessFilter 过滤器类
+   # pre: #过滤器；类型
+    #  disable: true
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone:  http://peer1:1111/eureka/   #将自己注册到注册中心，可以获取服务的实例清单，再从服务中挑选实例来进行请求转发
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000  #设置API网关中路由转发请求的断路器执行超时时间
+ribbon:
+  ConnectTimeout: 500
+  ReadTimeout: 250
